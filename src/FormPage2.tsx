@@ -13,14 +13,14 @@ import RenderCount from "./RenderCount";
 export default function Page2() {
   type FormData = {
     name: string;
-    accounts: boolean;
+    accounts: "disabled" | "enabled";
     check: boolean;
   };
 
   const defaultValues: FormData = {
     name: "Jaded Pixel",
-    accounts: false,
-    check: false,
+    accounts: "disabled",
+    check: true,
   };
 
   const {
@@ -50,26 +50,18 @@ export default function Page2() {
               control={control}
               name="name"
               label="Store name"
-              // value={value}
-              // onChange={handleChange}
               autoComplete="off"
             />
             <Stack vertical>
               <RadioButton
                 label="Accounts are disabled"
                 helpText="Customers will only be able to check out as guests."
-                // checked={value2 === false}
-                // id="disabled"
                 name="accounts"
-                // onChange={handleChange2}
               />
               <RadioButton
                 label="Accounts are optional"
                 helpText="Customers will be able to check out with a customer account or as a guest."
-                // id="optional"
                 name="accounts"
-                // checked={value2 === true}
-                // onChange={handleChange2}
               />
             </Stack>
 
@@ -77,8 +69,6 @@ export default function Page2() {
               control={control}
               label="Basic checkbox"
               name="check"
-              // checked={checked}
-              // onChange={handleChange3}
             />
           </FormLayout>
         </Form>
