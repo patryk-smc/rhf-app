@@ -6,17 +6,15 @@
 
 # TODO
 
-## Milestone 1
+1. Prevent rerenders from taking place when interacting with TextField and Checkbox, Select, SingleChoiceList
+2. Add support for RadioButton
+3. Get rid of React warnings (all inputs): https://cln.sh/5hLcJb
+4. Get rid of TypeScript errors (all inputs): https://cln.sh/6QahSB
 
-1. Prevent rerenders from taking place when interacting with TextField and Checkbox
-2. Get rid of TypeScript errors
+# Polaris docs
 
-## Milestone 2
-
-3. Add support for RadioButton <https://polaris.shopify.com/components/forms/radio-button#navigation>
-4. Add support for Select <https://polaris.shopify.com/components/forms/select>
-5. Add support for Single ChoiceList <https://polaris.shopify.com/components/forms/choice-list#navigation>
-
-## Milestone 3
-
-6. Add support for errors to all inputs
+- TextField: https://polaris.shopify.com/components/forms/text-field#navigation
+- Checkbox: https://polaris.shopify.com/components/forms/checkbox#navigation
+- Select: https://polaris.shopify.com/components/forms/select#navigation
+- ChoiceList: https://polaris.shopify.com/components/forms/choice-list#navigation
+- RadioButton: https://polaris.shopify.com/components/forms/radio-button#navigation
