@@ -109,7 +109,7 @@ const Page2 = () => {
               autoComplete='off'
             />
             <TextField
-              minLength={10}
+              min={10}
               control={control}
               name='weight'
               label='Weight (kgs)'
