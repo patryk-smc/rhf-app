@@ -138,6 +138,7 @@ export const RadioGroup = <
     <Stack {...props}>
       {options.map(({ id, ...option }) => (
         <PolarisRadioButton
+          key={id}
           {...option}
           {...fieldProps}
           onChange={(value, id) => _onChange(id)}
