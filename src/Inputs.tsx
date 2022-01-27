@@ -3,12 +3,18 @@ import {
   Checkbox as PolarisCheckbox,
   Select as PolarisSelect,
   ChoiceList as PolarisChoiceList,
+  RadioButton as PolarisRadioButton,
+  Stack,
+  DisplayText,
 } from '@shopify/polaris'
 import type {
   TextFieldProps as PolarisTextFieldProps,
   CheckboxProps as PolarisCheckboxProps,
   SelectProps as PolarisSelectProps,
   ChoiceListProps as PolarisChoiceListProps,
+  RadioButtonProps as PolarisRadioButtonProps,
+  StackProps as PolarisStackProps,
+  DisplayTextProps as PolarisDisplayTextProps,
 } from '@shopify/polaris'
 import { useController } from 'react-hook-form'
 import type { UseControllerProps, FieldValues, FieldPath } from 'react-hook-form'
@@ -52,6 +58,40 @@ export const Select = <TFieldValues extends FieldValues, TName extends FieldPath
   } = useController(props)
 
   return <PolarisSelect {...fieldProps} {...props} error={fieldState.error?.message} />
+}
+
+type RadioButtonProps = Omit<
+  PolarisRadioButtonProps,
+  'checked' | 'name' | 'value' | 'onChange' | 'onFocus' | 'onBlur'
+>
+
+export const RadioGroup = <
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>
+>({
+  options,
+  ...props
+}: PolarisStackProps & {
+  // INFO: might want to add a title prop for the Radio Group
+  options: RadioButtonProps[]
+} & UseControllerProps<TFieldValues, TName>) => {
+  const {
+    field: { ref, onChange, value, ...fieldProps },
+  } = useController(props)
+
+  return (
+    <Stack {...props}>
+      {options.map(({ id, ...option }) => (
+        <PolarisRadioButton
+          {...option}
+          {...fieldProps}
+          onChange={(value, id) => onChange(id)}
+          id={id}
+          checked={value === id}
+        />
+      ))}
+    </Stack>
+  )
 }
 
 export const SingleChoiceList = <

@@ -1,7 +1,7 @@
 import { Button, Card, Form, FormLayout, Page } from '@shopify/polaris'
 import type { DefaultValues, SubmitHandler, Control } from 'react-hook-form'
 import { useForm, useWatch } from 'react-hook-form'
-import { Checkbox, Select, SingleChoiceList, TextField } from './Inputs'
+import { Checkbox, RadioGroup, Select, SingleChoiceList, TextField } from './Inputs'
 import useRenders from './useRenders'
 
 interface FormValuesPreviewProps {
@@ -25,14 +25,29 @@ const options = [
   { label: 'B', value: 'b' },
 ]
 
+const radioOptions = [
+  {
+    label: 'Accounts are disabled',
+    helpText: 'Customers will only be able to check out as guests.',
+    id: 'disabled',
+  },
+  {
+    label: 'Accounts are enabled',
+    helpText: 'Customers will be able to check out with a customer account only.',
+    id: 'enabled',
+  },
+]
+
 type Option = 'a' | 'b'
+type RadioOption = 'disabled' | 'enabled'
 
 interface FormValues {
   name: string
-  accounts: 'disabled' | 'enabled'
+  accounts: RadioOption
   check: boolean
   sel: Option
   choice: Option
+  radio: RadioOption
 }
 
 const defaultValues: DefaultValues<FormValues> = {
@@ -41,6 +56,7 @@ const defaultValues: DefaultValues<FormValues> = {
   check: true,
   sel: 'b',
   choice: 'a',
+  radio: 'disabled',
 }
 
 const onSubmit: SubmitHandler<FormValues> = data => {
@@ -70,6 +86,7 @@ const Page2 = () => {
             <Checkbox control={control} label='Basic checkbox' name='check' />
             <Select control={control} label='Select label' name='sel' options={options} />
             <SingleChoiceList control={control} name='choice' title='Choices' choices={options} />
+            <RadioGroup vertical control={control} name='radio' options={radioOptions} />
             <Button submit primary loading={isSubmitting}>
               Save product
             </Button>
