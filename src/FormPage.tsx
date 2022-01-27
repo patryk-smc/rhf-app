@@ -36,6 +36,11 @@ const radioOptions = [
     helpText: 'Customers will be able to check out with a customer account only.',
     id: 'enabled',
   },
+  {
+    label: 'Accounts are optional',
+    id: 'optional',
+    disabled: true
+  },
 ]
 
 type Option = 'a' | 'b'
