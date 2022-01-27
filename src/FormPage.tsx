@@ -48,6 +48,8 @@ interface FormValues {
   sel: Option
   choice: Option
   radio: RadioOption
+  price: string
+  weight: string
 }
 
 const defaultValues: DefaultValues<FormValues> = {
@@ -57,6 +59,8 @@ const defaultValues: DefaultValues<FormValues> = {
   sel: 'b',
   choice: 'a',
   radio: 'disabled',
+  price: "11.99",
+  weight: "1.5",
 }
 
 const onSubmit: SubmitHandler<FormValues> = data => {
@@ -82,6 +86,25 @@ const Page2 = () => {
               name='name'
               label='Store Name'
               autoComplete='name'
+            />
+           <TextField
+              minLength={10}
+              control={control}
+              name='price'
+              label='Price'
+              type='currency'
+              inputMode='decimal'
+              autoComplete='off'
+            />
+            <TextField
+              minLength={10}
+              control={control}
+              name='weight'
+              label='Weight (kgs)'
+              type='number'
+              inputMode='decimal'
+              helpText="Up to two decimal places"
+              autoComplete='off'
             />
             <Checkbox control={control} label='Basic checkbox' name='check' />
             <Select control={control} label='Select label' name='sel' options={options} />
