@@ -5,7 +5,6 @@ import {
   ChoiceList as PolarisChoiceList,
   RadioButton as PolarisRadioButton,
   Stack,
-  DisplayText,
 } from '@shopify/polaris'
 import type {
   TextFieldProps as PolarisTextFieldProps,
@@ -14,7 +13,6 @@ import type {
   ChoiceListProps as PolarisChoiceListProps,
   RadioButtonProps as PolarisRadioButtonProps,
   StackProps as PolarisStackProps,
-  DisplayTextProps as PolarisDisplayTextProps,
 } from '@shopify/polaris'
 import { useController } from 'react-hook-form'
 import type { UseControllerProps, FieldValues, FieldPath } from 'react-hook-form'
