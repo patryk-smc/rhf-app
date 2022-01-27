@@ -1,4 +1,4 @@
-import { Button, Card, Form, FormLayout, Page } from '@shopify/polaris'
+import { Button, Card, ContextualSaveBar, Form, FormLayout, Layout, Page, PageActions } from '@shopify/polaris'
 import { DefaultValues, SubmitHandler, Control, useFormState } from 'react-hook-form'
 import { useForm, useWatch } from 'react-hook-form'
 import { Checkbox, RadioGroup, Select, SingleChoiceList, TextField } from './Inputs'
@@ -31,6 +31,52 @@ const SubmitButton = ({ control }: SubmitButtonProps) => {
     <Button submit primary loading={isSubmitting}>
       Save product
     </Button>
+  )
+}
+
+interface FormActionsProps {
+  control: Control<FormValues>
+}
+// INFO: to avoid subscribing the whole form to the formState changes (prevent rerenders)
+const FormActions = ({ control }: FormActionsProps) => {
+  const { isSubmitting } = useFormState({ control })
+  const isDirty = true // placeholder
+  const reset = () => {} // placeholder
+  const submit = () => {} // placeholder
+
+  return (
+    <>
+      {isDirty && (
+        <ContextualSaveBar
+          message={"Unsaved changes"}
+          saveAction={{
+            content: "Save",
+            onAction: submit,
+            loading: isSubmitting,
+            disabled: false
+          }}
+          discardAction={{
+            onAction: reset,
+            content: "Discard"
+          }}
+        />
+      )}
+      <PageActions
+      secondaryActions={[
+        {
+          content: "Discard",
+          disabled: !isDirty,
+          onAction: reset
+        }
+      ]}
+      primaryAction={{
+        content: "Save",
+        disabled: !isDirty,
+        loading: isSubmitting,
+        onAction: submit
+      }}
+    />
+  </>
   )
 }
 
@@ -144,6 +190,7 @@ const Page2 = () => {
           </FormLayout>
         </Form>
       </Card>
+      <FormActions control={control}/>
       <FormValuesPreview control={control} />
     </Page>
   )
