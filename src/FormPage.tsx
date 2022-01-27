@@ -35,14 +35,7 @@ export default function Page2() {
     formState: { errors, isDirty },
   } = useForm<FormData>({
     defaultValues,
-  });
-
-  const fields = watch();
-
-  const onSubmit = (data: FormData) => {
-    console.log("Send to API", data);
-    alert(JSON.stringify(data, null, 2));
-  };
+  const renders = useRenders()
 
   return (
     <Page title={"Form with React Hook Form"}>
