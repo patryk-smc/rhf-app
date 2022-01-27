@@ -1,6 +1,15 @@
-import { Button, Card, ContextualSaveBar, Form, FormLayout, Layout, Page, PageActions } from '@shopify/polaris'
-import { DefaultValues, SubmitHandler, Control, useFormState } from 'react-hook-form'
-import { useForm, useWatch } from 'react-hook-form'
+import { useEffect } from 'react'
+import {
+  Button,
+  Card,
+  ContextualSaveBar,
+  Form,
+  FormLayout,
+  Page,
+  PageActions,
+} from '@shopify/polaris'
+import type { DefaultValues, SubmitHandler, Control, UseFormSetValue } from 'react-hook-form'
+import { useForm, useWatch, useFormState } from 'react-hook-form'
 import { Checkbox, RadioGroup, Select, SingleChoiceList, TextField } from './Inputs'
 import useRenders from './useRenders'
 
