@@ -39,7 +39,7 @@ const radioOptions = [
   {
     label: 'Accounts are optional',
     id: 'optional',
-    disabled: true
+    disabled: true,
   },
 ]
 
@@ -64,8 +64,8 @@ const defaultValues: DefaultValues<FormValues> = {
   sel: 'b',
   choice: 'a',
   radio: 'disabled',
-  price: "11.99",
-  weight: "1.5",
+  price: '11.99',
+  weight: '1.5',
 }
 
 const onSubmit: SubmitHandler<FormValues> = data => {
@@ -74,7 +74,7 @@ const onSubmit: SubmitHandler<FormValues> = data => {
 }
 
 const Page2 = () => {
-  const { control, handleSubmit, formState } = useForm<FormValues>({
+  const { control, handleSubmit, formState, setValue } = useForm<FormValues>({
     defaultValues,
   })
   const { isSubmitting } = formState
@@ -92,11 +92,18 @@ const Page2 = () => {
               label='Store Name'
               autoComplete='name'
             />
-           <TextField
+            <TextField
               minLength={10}
               control={control}
               name='price'
               label='Price'
+              onBlur={event => {
+                // INFO: Might be worth proving a `format` callback inside the TextField instead
+                // and exposing it. Idk what would suite the use-case.
+                // INFO: format your value here
+                const formattedValue = event.target.value
+                setValue('price', `${formattedValue} formatted`)
+              }}
               type='currency'
               inputMode='decimal'
               autoComplete='off'
@@ -106,9 +113,14 @@ const Page2 = () => {
               control={control}
               name='weight'
               label='Weight (kgs)'
+              onBlur={event => {
+                // INFO: format your value here
+                const formattedValue = event.target.value
+                setValue('weight', formattedValue)
+              }}
               type='number'
               inputMode='decimal'
-              helpText="Up to two decimal places"
+              helpText='Up to two decimal places'
               autoComplete='off'
             />
             <Checkbox control={control} label='Basic checkbox' name='check' />
