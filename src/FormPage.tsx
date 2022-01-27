@@ -39,8 +39,7 @@ interface FormActionsProps {
 }
 // INFO: to avoid subscribing the whole form to the formState changes (prevent rerenders)
 const FormActions = ({ control }: FormActionsProps) => {
-  const { isSubmitting } = useFormState({ control })
-  const isDirty = true // placeholder
+  const { isSubmitting, isDirty } = useFormState({ control })
   const reset = () => {} // placeholder
   const submit = () => {} // placeholder
 
