@@ -56,35 +56,60 @@ const FormActions = ({ control }: FormActionsProps) => {
     <>
       {isDirty && (
         <ContextualSaveBar
-          message={"Unsaved changes"}
+          message={'Unsaved changes'}
           saveAction={{
-            content: "Save",
+            content: 'Save',
             onAction: submit,
             loading: isSubmitting,
-            disabled: false
+            disabled: false,
           }}
           discardAction={{
             onAction: reset,
-            content: "Discard"
+            content: 'Discard',
           }}
         />
       )}
       <PageActions
-      secondaryActions={[
-        {
-          content: "Discard",
+        secondaryActions={[
+          {
+            content: 'Discard',
+            disabled: !isDirty,
+            onAction: reset,
+          },
+        ]}
+        primaryAction={{
+          content: 'Save',
           disabled: !isDirty,
-          onAction: reset
-        }
-      ]}
-      primaryAction={{
-        content: "Save",
-        disabled: !isDirty,
-        loading: isSubmitting,
-        onAction: submit
-      }}
+          loading: isSubmitting,
+          onAction: submit,
+        }}
+      />
+    </>
+  )
+}
+
+interface CheckboxInputProps {
+  control: Control<FormValues>
+  setValue: UseFormSetValue<FormValues>
+}
+
+const CheckboxInput = ({ control, setValue }: CheckboxInputProps) => {
+  const sel = useWatch({ control, name: 'sel' })
+
+  useEffect(() => {
+    if (sel === 'a') {
+      setValue('check', false)
+    }
+  }, [sel, setValue])
+
+  return (
+    <Checkbox
+      control={control}
+      label='Basic checkbox'
+      name='check'
+      // INFO: by subscribing to sel value change, we can toggle the state of this input
+      disabled={sel === 'a'}
     />
-  </>
   )
 }
 
@@ -142,9 +167,20 @@ const onSubmit: SubmitHandler<FormValues> = data => {
 }
 
 const Page2 = () => {
-  const { control, handleSubmit, setValue } = useForm<FormValues>({
+  const { control, handleSubmit, setValue, watch } = useForm<FormValues>({
     defaultValues,
   })
+  const sel = watch('sel')
+  // INFO: you can simply use root-level watch to create side-effects on value change
+  // it will cause a re-render of the whole form. Depending on the form / value / anything else
+  // you might wanna localize the re-render into it's own component and use `useWatch` there
+  // But in this form, I'd say, it would be over-optimizing, so I'd simply do it here
+  useEffect(() => {
+    if (sel === 'a') {
+      setValue('check', false)
+    }
+  }, [sel, setValue])
+
   const renders = useRenders()
 
   return (
@@ -190,7 +226,15 @@ const Page2 = () => {
               helpText='Up to two decimal places'
               autoComplete='off'
             />
-            <Checkbox control={control} label='Basic checkbox' name='check' />
+            {/* INFO: alternative way to watch for `sel` value and disable the check input with it's value set to false */}
+            {/* <CheckboxInput control={control} setValue={setValue} /> */}
+            <Checkbox
+              control={control}
+              label='Basic checkbox'
+              name='check'
+              // INFO: by subscribing to sel value change, we can toggle the state of this input
+              disabled={sel === 'a'}
+            />
             <Select control={control} label='Select label' name='sel' options={options} />
             <SingleChoiceList control={control} name='choice' title='Choices' choices={options} />
             <RadioGroup vertical control={control} name='radio' options={radioOptions} />
@@ -198,7 +242,7 @@ const Page2 = () => {
           </FormLayout>
         </Form>
       </Card>
-      <FormActions control={control}/>
+      <FormActions control={control} />
       <FormValuesPreview control={control} />
     </Page>
   )
