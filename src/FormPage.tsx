@@ -1,5 +1,5 @@
 import { Button, Card, Form, FormLayout, Page } from '@shopify/polaris'
-import type { DefaultValues, SubmitHandler, Control } from 'react-hook-form'
+import { DefaultValues, SubmitHandler, Control, useFormState } from 'react-hook-form'
 import { useForm, useWatch } from 'react-hook-form'
 import { Checkbox, RadioGroup, Select, SingleChoiceList, TextField } from './Inputs'
 import useRenders from './useRenders'
@@ -17,6 +17,20 @@ const FormValuesPreview = ({ control }: FormValuesPreviewProps) => {
         <code>{JSON.stringify(formValues, null, 2)}</code>
       </pre>
     </Card>
+  )
+}
+
+interface SubmitButtonProps {
+  control: Control<FormValues>
+}
+// INFO: to avoid subscribing the whole form to the formState changes (prevent rerenders)
+const SubmitButton = ({ control }: SubmitButtonProps) => {
+  const { isSubmitting } = useFormState({ control })
+
+  return (
+    <Button submit primary loading={isSubmitting}>
+      Save product
+    </Button>
   )
 }
 
@@ -74,10 +88,9 @@ const onSubmit: SubmitHandler<FormValues> = data => {
 }
 
 const Page2 = () => {
-  const { control, handleSubmit, formState, setValue } = useForm<FormValues>({
+  const { control, handleSubmit, setValue } = useForm<FormValues>({
     defaultValues,
   })
-  const { isSubmitting } = formState
   const renders = useRenders()
 
   return (
@@ -127,9 +140,7 @@ const Page2 = () => {
             <Select control={control} label='Select label' name='sel' options={options} />
             <SingleChoiceList control={control} name='choice' title='Choices' choices={options} />
             <RadioGroup vertical control={control} name='radio' options={radioOptions} />
-            <Button submit primary loading={isSubmitting}>
-              Save product
-            </Button>
+            <SubmitButton control={control} />
           </FormLayout>
         </Form>
       </Card>
