@@ -1,90 +1,101 @@
-import {
-  Page,
-  Card,
-  Form,
-  FormLayout,
-  RadioButton,
-  Stack,
-} from "@shopify/polaris";
-import { Checkbox, Select, SingleChoiceList, TextField } from "./Inputs";
-import { useForm } from "react-hook-form";
-import RenderCount from "./RenderCount";
+import { Button, Card, Form, FormLayout, Page } from '@shopify/polaris'
+import type { DefaultValues, SubmitHandler, Control } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
+import { Checkbox, RadioGroup, Select, SingleChoiceList, TextField } from './Inputs'
+import useRenders from './useRenders'
 
-export default function Page2() {
-  type FormData = {
-    name: string;
-    accounts: "disabled" | "enabled";
-    check: boolean;
-    sel: string;
-    choice: string;
-  };
+interface FormValuesPreviewProps {
+  control: Control<FormValues>
+}
 
-  const defaultValues: FormData = {
-    name: "Jaded Pixel",
-    accounts: "disabled",
-    check: true,
-    sel: "b",
-    choice: "x",
-  };
-
-  const {
-    handleSubmit,
-    reset,
-    control,
-    watch,
-    formState: { errors, isDirty },
-  } = useForm<FormData>({
-    defaultValues,
-  });
-
-  const fields = watch();
-
-  const onSubmit = (data: FormData) => {
-    console.log("Send to API", data);
-    alert(JSON.stringify(data, null, 2));
-  };
+const FormValuesPreview = ({ control }: FormValuesPreviewProps) => {
+  const formValues = useWatch({ control })
 
   return (
-    <Page title={"Form with React Hook Form"}>
+    <Card title='Form Values Preview (For Demo purposes)' sectioned>
+      <pre>
+        <code>{JSON.stringify(formValues, null, 2)}</code>
+      </pre>
+    </Card>
+  )
+}
+
+const options = [
+  { label: 'A', value: 'a' },
+  { label: 'B', value: 'b' },
+]
+
+const radioOptions = [
+  {
+    label: 'Accounts are disabled',
+    helpText: 'Customers will only be able to check out as guests.',
+    id: 'disabled',
+  },
+  {
+    label: 'Accounts are enabled',
+    helpText: 'Customers will be able to check out with a customer account only.',
+    id: 'enabled',
+  },
+]
+
+type Option = 'a' | 'b'
+type RadioOption = 'disabled' | 'enabled'
+
+interface FormValues {
+  name: string
+  accounts: RadioOption
+  check: boolean
+  sel: Option
+  choice: Option
+  radio: RadioOption
+}
+
+const defaultValues: DefaultValues<FormValues> = {
+  name: 'Jaded Pixel',
+  accounts: 'disabled',
+  check: true,
+  sel: 'b',
+  choice: 'a',
+  radio: 'disabled',
+}
+
+const onSubmit: SubmitHandler<FormValues> = data => {
+  console.log('Send to API', data)
+  alert(JSON.stringify(data, null, 2))
+}
+
+const Page2 = () => {
+  const { control, handleSubmit, formState } = useForm<FormValues>({
+    defaultValues,
+  })
+  const { isSubmitting } = formState
+  const renders = useRenders()
+
+  return (
+    <Page title={`Form with React Hook Form (Renders: ${renders})`}>
       <Card sectioned>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <RenderCount />
           <FormLayout>
-            <TextField<FormData>
+            <TextField
+              minLength={10}
               control={control}
-              name="name"
-              label="Store name"
-              autoComplete="off"
+              name='name'
+              label='Store Name'
+              autoComplete='name'
             />
-
-            <Checkbox<FormData>
-              control={control}
-              label="Basic checkbox"
-              name="check"
-            />
-
-            <Select<FormData>
-              control={control}
-              label="Select label"
-              name="sel"
-              options={[
-                { label: "A", value: "a" },
-                { label: "B", value: "b" },
-              ]}
-            />
-
-            <SingleChoiceList<FormData>
-              control={control}
-              name="choice"
-              title="Choices"
-              choices={[
-                { label: "A", value: "a" },
-                { label: "B", value: "b" },
-              ]}
-            />
+            <Checkbox control={control} label='Basic checkbox' name='check' />
+            <Select control={control} label='Select label' name='sel' options={options} />
+            <SingleChoiceList control={control} name='choice' title='Choices' choices={options} />
+            <RadioGroup vertical control={control} name='radio' options={radioOptions} />
+            <Button submit primary loading={isSubmitting}>
+              Save product
+            </Button>
           </FormLayout>
         </Form>
       </Card>
+      <FormValuesPreview control={control} />
     </Page>
-  );
+  )
 }
+
+export default Page2
