@@ -8,7 +8,15 @@ import {
   Page,
   PageActions,
 } from '@shopify/polaris'
-import type { DefaultValues, SubmitHandler, Control, UseFormSetValue } from 'react-hook-form'
+import type {
+  DefaultValues,
+  SubmitHandler,
+  Control,
+  UseFormSetValue,
+  UseFormReset,
+  UseFormHandleSubmit,
+  SubmitErrorHandler,
+} from 'react-hook-form'
 import { useForm, useWatch, useFormState } from 'react-hook-form'
 import { Checkbox, RadioGroup, Select, SingleChoiceList, TextField } from './Inputs'
 import useRenders from './useRenders'
@@ -45,12 +53,12 @@ const SubmitButton = ({ control }: SubmitButtonProps) => {
 
 interface FormActionsProps {
   control: Control<FormValues>
+  reset: UseFormReset<FormValues>
+  submit: () => Promise<void>
 }
 // INFO: to avoid subscribing the whole form to the formState changes (prevent rerenders)
-const FormActions = ({ control }: FormActionsProps) => {
+const FormActions = ({ control, submit, reset }: FormActionsProps) => {
   const { isSubmitting, isDirty } = useFormState({ control })
-  const reset = () => {} // placeholder
-  const submit = () => {} // placeholder
 
   return (
     <>
@@ -161,13 +169,8 @@ const defaultValues: DefaultValues<FormValues> = {
   weight: '1.5',
 }
 
-const onSubmit: SubmitHandler<FormValues> = data => {
-  console.log('Send to API', data)
-  alert(JSON.stringify(data, null, 2))
-}
-
 const Page2 = () => {
-  const { control, handleSubmit, setValue, watch } = useForm<FormValues>({
+  const { control, handleSubmit, reset, setValue, watch } = useForm<FormValues>({
     defaultValues,
   })
   const sel = watch('sel')
@@ -181,12 +184,24 @@ const Page2 = () => {
     }
   }, [sel, setValue])
 
+  const onSubmit: SubmitHandler<FormValues> = data => {
+    console.log('Send to API', data)
+    alert(JSON.stringify(data, null, 2))
+    // INFO: can close the form modal here or some other business logic here
+  }
+
+  const onError: SubmitErrorHandler<FormValues> = errors => {
+    console.log('Handle errors', errors)
+  }
+
+  const submit = handleSubmit(onSubmit, onError)
+
   const renders = useRenders()
 
   return (
     <Page title={`Form with React Hook Form (Renders: ${renders})`}>
       <Card sectioned>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={submit}>
           <FormLayout>
             <TextField
               minLength={10}
@@ -242,7 +257,7 @@ const Page2 = () => {
           </FormLayout>
         </Form>
       </Card>
-      <FormActions control={control} />
+      <FormActions control={control} reset={reset} submit={submit} />
       <FormValuesPreview control={control} />
     </Page>
   )
