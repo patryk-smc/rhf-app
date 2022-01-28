@@ -204,6 +204,7 @@ const Page2 = () => {
         <Form onSubmit={submit}>
           <FormLayout>
             <TextField
+              required='Store name is required'
               minLength={{
                 value: 1,
                 message: 'Store name must be at least 1 characters',
@@ -230,7 +231,7 @@ const Page2 = () => {
                 // and exposing it. Idk what would suite the use-case.
                 // INFO: format your value here
                 const formattedValue = event.target.value
-                setValue('price', formattedValue.replace(",", "."))
+                setValue('price', formattedValue.replace(',', '.'))
               }}
               type='currency'
               inputMode='decimal'
