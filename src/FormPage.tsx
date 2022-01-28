@@ -204,14 +204,20 @@ const Page2 = () => {
         <Form onSubmit={submit}>
           <FormLayout>
             <TextField
-              minLength={10}
+              minLength={{
+                value: 10,
+                message: 'Store name must be at least 10 characters',
+              }}
               control={control}
               name='name'
               label='Store Name'
               autoComplete='name'
             />
             <TextField
-              minLength={10}
+              minLength={{
+                value: 10,
+                message: 'Price must be at least 10 characters',
+              }}
               control={control}
               name='price'
               label='Price'
@@ -227,7 +233,10 @@ const Page2 = () => {
               autoComplete='off'
             />
             <TextField
-              min={10}
+              min={{
+                value: 10,
+                message: 'Weight must be more at least 10 kgs',
+              }}
               control={control}
               name='weight'
               label='Weight (kgs)'
