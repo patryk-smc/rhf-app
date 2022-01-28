@@ -16,14 +16,29 @@ import type {
 } from '@shopify/polaris'
 import { useController } from 'react-hook-form'
 import type { UseControllerProps, FieldValues, FieldPath, RegisterOptions } from 'react-hook-form'
+import isObject from './isObject'
 // INFO: useController wants it's own type-safe `name` passed + returns `field.name` to spread into the input
 // INFO: Might need additional props omitted if matters _(i.e. onChange, onBlur etc.)_
 // as useController passes it's on callbacks. Passed input props might re-write the field handlers
-type ControllerProps = 'name' | 'onBlur' | 'onChange' | 'value' | 'pattern'
+type ControllerProps =
+  | 'name'
+  | 'onBlur'
+  | 'onChange'
+  | 'value'
+  | 'pattern'
+  | 'min'
+  | 'max'
+  | 'minLength'
+  | 'maxLength'
 
 type OmitDuplicateInputProps<InputProps> = Omit<InputProps, ControllerProps>
 
 export const TextField = <TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>>({
+  // INFO: use RHF validation props instead of TextField to be able to pass validation messages on error
+  min,
+  max,
+  maxLength,
+  minLength,
   onBlur,
   onChange,
   validate,
@@ -32,7 +47,10 @@ export const TextField = <TFieldValues extends FieldValues, TName extends FieldP
 }: OmitDuplicateInputProps<PolarisTextFieldProps> &
   Omit<UseControllerProps<TFieldValues, TName>, 'rules'> &
   // INFO: event type of `onChange` & `onBlur` is `any` in RHF. Might be worth looking into providing your own `event` types here
-  Pick<RegisterOptions<TFieldValues, TName>, 'onBlur' | 'onChange' | 'validate' | 'pattern'>) => {
+  Pick<
+    RegisterOptions<TFieldValues, TName>,
+    'onBlur' | 'onChange' | 'validate' | 'pattern' | 'min' | 'max' | 'maxLength' | 'minLength'
+  >) => {
   const {
     field: { ref, ...fieldProps },
     fieldState,
@@ -40,6 +58,10 @@ export const TextField = <TFieldValues extends FieldValues, TName extends FieldP
     ...props,
     rules: {
       ...props,
+      min,
+      max,
+      maxLength,
+      minLength,
       onBlur,
       onChange,
     },
@@ -49,6 +71,12 @@ export const TextField = <TFieldValues extends FieldValues, TName extends FieldP
     <PolarisTextField
       {...fieldProps}
       {...props}
+      // INFO: RHF validation props can be objects to pass their messages along with their conditions for DX
+      // need to handle the difference between RHF and Polaris validation patterns
+      min={isObject(min) ? min.value : min}
+      max={isObject(max) ? max.value : max}
+      maxLength={isObject(maxLength) ? maxLength.value : maxLength}
+      minLength={isObject(minLength) ? minLength.value : minLength}
       pattern={pattern?.toString()}
       error={fieldState.error?.message}
     />
