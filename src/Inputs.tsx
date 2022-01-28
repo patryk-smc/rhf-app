@@ -30,6 +30,7 @@ type ControllerProps =
   | 'max'
   | 'minLength'
   | 'maxLength'
+  | 'requiredIndicator'
 
 type OmitDuplicateInputProps<InputProps> = Omit<InputProps, ControllerProps>
 
@@ -38,6 +39,7 @@ export const TextField = <TFieldValues extends FieldValues, TName extends FieldP
   min,
   max,
   maxLength,
+  required,
   minLength,
   onBlur,
   onChange,
@@ -49,7 +51,15 @@ export const TextField = <TFieldValues extends FieldValues, TName extends FieldP
   // INFO: event type of `onChange` & `onBlur` is `any` in RHF. Might be worth looking into providing your own `event` types here
   Pick<
     RegisterOptions<TFieldValues, TName>,
-    'onBlur' | 'onChange' | 'validate' | 'pattern' | 'min' | 'max' | 'maxLength' | 'minLength'
+    | 'onBlur'
+    | 'onChange'
+    | 'validate'
+    | 'pattern'
+    | 'min'
+    | 'max'
+    | 'maxLength'
+    | 'minLength'
+    | 'required'
   >) => {
   const {
     field: { ref, ...fieldProps },
@@ -58,6 +68,7 @@ export const TextField = <TFieldValues extends FieldValues, TName extends FieldP
     ...props,
     rules: {
       ...props,
+      required,
       min,
       max,
       maxLength,
@@ -77,6 +88,7 @@ export const TextField = <TFieldValues extends FieldValues, TName extends FieldP
       max={isObject(max) ? max.value : max}
       maxLength={isObject(maxLength) ? maxLength.value : maxLength}
       minLength={isObject(minLength) ? minLength.value : minLength}
+      requiredIndicator={!!required}
       pattern={pattern?.toString()}
       error={fieldState.error?.message}
     />
@@ -113,10 +125,11 @@ export const Select = <TFieldValues extends FieldValues, TName extends FieldPath
   onChange,
   onBlur,
   validate,
+  required,
   ...props
 }: OmitDuplicateInputProps<PolarisSelectProps> &
   UseControllerProps<TFieldValues, TName> &
-  Pick<RegisterOptions<TFieldValues, TName>, 'onBlur' | 'onChange' | 'validate'>) => {
+  Pick<RegisterOptions<TFieldValues, TName>, 'onBlur' | 'onChange' | 'validate' | 'required'>) => {
   const {
     field: { ref, ...fieldProps },
     fieldState,
@@ -129,7 +142,14 @@ export const Select = <TFieldValues extends FieldValues, TName extends FieldPath
     },
   })
 
-  return <PolarisSelect {...fieldProps} {...props} error={fieldState.error?.message} />
+  return (
+    <PolarisSelect
+      {...fieldProps}
+      {...props}
+      requiredIndicator={!!required}
+      error={fieldState.error?.message}
+    />
+  )
 }
 
 type RadioButtonProps = Omit<
