@@ -72,7 +72,7 @@ const FormActions = ({ control, submit, reset }: FormActionsProps) => {
             disabled: false,
           }}
           discardAction={{
-            onAction: reset,
+            onAction: () => reset(),
             content: 'Discard',
           }}
         />
@@ -82,7 +82,7 @@ const FormActions = ({ control, submit, reset }: FormActionsProps) => {
           {
             content: 'Discard',
             disabled: !isDirty,
-            onAction: reset,
+            onAction: () => reset(),
           },
         ]}
         primaryAction={{
