@@ -88,7 +88,6 @@ export const TextField = <TFieldValues extends FieldValues, TName extends FieldP
       max={isObject(max) ? max.value : max}
       maxLength={isObject(maxLength) ? maxLength.value : maxLength}
       minLength={isObject(minLength) ? minLength.value : minLength}
-      requiredIndicator={!!required}
       pattern={pattern?.toString()}
       error={fieldState.error?.message}
     />
