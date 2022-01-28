@@ -204,14 +204,24 @@ const Page2 = () => {
         <Form onSubmit={submit}>
           <FormLayout>
             <TextField
-              minLength={10}
+              minLength={{
+                value: 1,
+                message: 'Store name must be at least 1 characters',
+              }}
+              maxLength={{
+                value: 255,
+                message: 'Store name must be at most 255 characters',
+              }}
               control={control}
               name='name'
               label='Store Name'
               autoComplete='name'
             />
             <TextField
-              minLength={10}
+              maxLength={{
+                value: 7,
+                message: 'Price cannot be more than 1000.00',
+              }}
               control={control}
               name='price'
               label='Price'
@@ -220,14 +230,22 @@ const Page2 = () => {
                 // and exposing it. Idk what would suite the use-case.
                 // INFO: format your value here
                 const formattedValue = event.target.value
-                setValue('price', `${formattedValue} formatted`)
+                setValue('price', formattedValue.replace(",", "."))
               }}
               type='currency'
               inputMode='decimal'
               autoComplete='off'
             />
             <TextField
-              min={10}
+              min={{
+                value: 0.1,
+                message: 'Weight must be more at least 0.1 kgs',
+              }}
+              max={{
+                value: 1000,
+                message: 'Weight cannot be more than 1000 kgs',
+              }}
+              step={0.1}
               control={control}
               name='weight'
               label='Weight (kgs)'
